@@ -55,16 +55,12 @@ class ArticleModel extends Model
      */
     protected function _after_find(&$result, $options)
     {
-        $result['cover_url'] = get_cover($result['cover'], 'default');
-        $result['banner_url'] = get_cover($result['banner']);
+        $result['cover_url']          = get_cover($result['cover'], 'default');
+        $result['banner_url']         = get_cover($result['banner']);
         $result['create_time_format'] = time_format($result['create_time'], 'Y-m-d H:i:s');
 
         // U函数对域名路由支持不完善导致这里只能写绝对地址
-        if ((request()->hostname() === 'localhost') || (request()->hostname() === '127.0.0.1')) {
-            $result['href'] = U('Site/Index/detail/', array('id' => $result['id']));
-        } else {
-            $result['href'] = U('/detail/id/' . $result['id']);
-        }
+        $result['href'] = U('Site/Index/detail/', array('id' => $result['id']));
     }
 
     /**
@@ -101,7 +97,7 @@ class ArticleModel extends Model
             }
         }
 
-        $con            = array();
+        $con = array();
         if ($cid) {
             $con["cid"] = array("in", $cid_list);
         }

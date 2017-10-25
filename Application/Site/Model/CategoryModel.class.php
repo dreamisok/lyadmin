@@ -61,18 +61,10 @@ class CategoryModel extends Model
         // 为了开发方便兼容localhost和127.0.0.1
         switch ($result['cate_type']) {
             case '0': // 文章列表
-                if ((request()->hostname() === 'localhost') || (request()->hostname() === '127.0.0.1')) {
-                    $result['href'] = U('Site/Index/lists/', array('cid' => $result['id']));
-                } else {
-                    $result['href'] = U('/lists/cid/' . $result['id']);
-                }
+                $result['href'] = U('Site/Index/lists/', array('cid' => $result['id']));
                 break;
             case '1': // 单页类型
-                if ((request()->hostname() === 'localhost') || (request()->hostname() === '127.0.0.1')) {
-                    $result['href'] = U('Site/Index/page/', array('cid' => $result['id']));
-                } else {
-                    $result['href'] = U('/page/cid/' . $result['id']);
-                }
+                $result['href'] = U('Site/Index/page/', array('cid' => $result['id']));
                 break;
             case '2': // 外链列表
                 $result['href'] = $result['url'];
@@ -102,7 +94,7 @@ class CategoryModel extends Model
         if (empty($cid)) {
             return false;
         }
-        $con = array();
+        $con              = array();
         $con['status']    = 1;
         $category_list    = $this->where($con)->field(true)->select();
         $current_category = $this->field(true)->find($cid); //获取当前分类的信息
@@ -139,11 +131,11 @@ class CategoryModel extends Model
         }
 
         //获取所有分类
-        $map = array();
+        $map            = array();
         $map['is_show'] = array('eq', '1');
-        $map['status'] = array('eq', '1');
-        $tree = new \lyf\Tree();
-        $list = $this->field($field)->where($map)->order('sort asc, id asc')->select();
+        $map['status']  = array('eq', '1');
+        $tree           = new \lyf\Tree();
+        $list           = $this->field($field)->where($map)->order('sort asc, id asc')->select();
 
         // 转换成树结构
         $list = $tree->list2tree($list, $pk = 'id', $pid = 'pid', $child = '_child', $root = (int) $id); //返回当前分类的子分类树
@@ -165,8 +157,8 @@ class CategoryModel extends Model
     public function getSameLevelCategoryTree($id)
     {
         //获取所有分类
-        $info        = $this->find($id);
-        $map = array();
+        $info          = $this->find($id);
+        $map           = array();
         $map['status'] = array('eq', 1);
         $map['pid']    = array('eq', $info['pid']);
         $list          = $this->field(true)->where($map)->order('sort asc')->select();
